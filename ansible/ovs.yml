@@ -1,0 +1,4 @@
+- hosts: ovs
+  roles:
+    - common
+    - openvswitch

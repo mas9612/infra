@@ -1,0 +1,11 @@
+- name: Install Open vSwitch
+  yum:
+    name: openvswitch
+  when: ansible_distribution == "CentOS"
+
+- name: Start Open vSwitch
+  systemd:
+    name: openvswitch
+    enabled: yes
+    state: started
+  when: ansible_distribution == "CentOS"
