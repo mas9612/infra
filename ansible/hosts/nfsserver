@@ -1,0 +1,2 @@
+[nfsserver]
+10.1.240.127 ansible_user=k800123

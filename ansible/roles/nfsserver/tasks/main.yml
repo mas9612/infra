@@ -1,0 +1,23 @@
+- name: Install required packages
+  yum:
+    name:
+      - nfs-utils
+  when: ansible_distribution == "CentOS"
+
+- name: Start NFS services
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: restarted
+  with_items:
+    - rpcbind.service
+    - nfs-server.service
+  when: ansible_distribution == "CentOS"
+
+- name: firewalld - Allow NFS service
+  firewalld:
+    service: nfs
+    permanent: true
+    immediate: yes
+    state: enabled
+  when: ansible_distribution == "CentOS"
