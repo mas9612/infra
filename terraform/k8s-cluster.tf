@@ -18,11 +18,11 @@ resource "vsphere_virtual_machine" "k8s-node" {
   count = 3
 
   name             = "k800123-${lookup(var.instance_hostnames, count.index)}"
-  resource_pool_id = "${data.vsphere_resource_pool.rp_test.id}"
+  resource_pool_id = "${data.vsphere_resource_pool.rp_production.id}"
   datastore_id     = "${data.vsphere_datastore.ds_master.id}"
 
   num_cpus  = 2
-  memory    = 2048
+  memory    = 4096
   guest_id  = "${data.vsphere_virtual_machine.centos7.guest_id}"
   scsi_type = "${data.vsphere_virtual_machine.centos7.scsi_type}"
 
