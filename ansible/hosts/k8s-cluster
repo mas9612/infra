@@ -1,0 +1,6 @@
+[k8s-master]
+10.1.240.222 ansible_user=k800123
+
+[k8s-worker]
+10.1.240.223 ansible_user=k800123
+10.1.240.224 ansible_user=k800123

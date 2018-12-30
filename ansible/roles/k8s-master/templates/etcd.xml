@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>etcd</short>
+  <description>etcd server</description>
+  <port protocol="tcp" port="2379-2380"/>
+</service>

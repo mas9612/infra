@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>kubelet</short>
+  <description>kubelet</description>
+  <port protocol="tcp" port="10250"/>
+</service>

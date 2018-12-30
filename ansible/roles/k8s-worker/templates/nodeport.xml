@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>nodeport</short>
+  <description>NodePort Services</description>
+  <port protocol="tcp" port="80-32767"/>
+</service>

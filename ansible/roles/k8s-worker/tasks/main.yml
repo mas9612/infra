@@ -1,0 +1,22 @@
+- name: Copy firewalld service files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+    - {'src': 'templates/nodeport.xml', 'dest': '/etc/firewalld/services/nodeport.xml'}
+  when: ansible_distribution == "CentOS"
+
+- name: firewalld - Reload
+  shell: firewall-cmd --reload
+  when: ansible_distribution == "CentOS"
+
+- name: firewalld - Allow worker services
+  firewalld:
+    service: nodeport
+    permanent: true
+    immediate: yes
+    state: enabled
+  when: ansible_distribution == "CentOS"

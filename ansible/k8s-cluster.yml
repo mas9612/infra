@@ -1,0 +1,11 @@
+- hosts: k8s-master
+  roles:
+    - common
+    - k8s-node
+    - k8s-master
+
+- hosts: k8s-worker
+  roles:
+    - common
+    - k8s-node
+    - k8s-worker
