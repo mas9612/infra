@@ -1,0 +1,65 @@
+- name: Install monitoring agent - Download node_exporter
+  get_url:
+    url: https://github.com/prometheus/node_exporter/releases/download/v0.16.0/node_exporter-0.16.0.linux-amd64.tar.gz
+    dest: /tmp
+    force: true
+    checksum: sha256:e92a601a5ef4f77cce967266b488a978711dabc527a720bea26505cba426c029
+  when: ansible_distribution == "CentOS"
+
+- name: Install monitoring agent - Unarchive node_exporter
+  unarchive:
+    src: /tmp/node_exporter-0.16.0.linux-amd64.tar.gz
+    dest: /tmp
+    remote_src: yes
+  when: ansible_distribution == "CentOS"
+
+- name: Install monitoring agent - Copy to /usr/local/bin
+  copy:
+    src: /tmp/node_exporter-0.16.0.linux-amd64/node_exporter
+    dest: /usr/local/bin/node_exporter
+    remote_src: yes
+    mode: 0755
+    owner: root
+    group: root
+  when: ansible_distribution == "CentOS"
+
+- name: Copy node_exporter's files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+    - {'src': 'templates/node_exporter.service', 'dest': '/etc/systemd/system/node_exporter.service'}
+    - {'src': 'templates/node_exporter.xml', 'dest': '/etc/firewalld/services/node_exporter.xml'}
+  when: ansible_distribution == "CentOS"
+
+- name: Start and Enable services
+  systemd:
+    name: "{{ item }}"
+    daemon_reload: yes
+    enabled: yes
+    state: started
+  with_items:
+    - firewalld.service
+    - node_exporter.service
+  when: ansible_distribution == "CentOS"
+
+- name: firewalld - Reload (To load node_exporter service)
+  shell: firewall-cmd --reload
+  when: ansible_distribution == "CentOS"
+
+- name: firewalld - Allow ssh/node_exporter only from internal network
+  firewalld:
+    rich_rule: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  with_items:
+    - 'rule family=ipv4 source address="10.1.0.0/16" service name=node_exporter accept'
+  when: ansible_distribution == "CentOS"
+
+- name: firewalld - Reload (To reflect changes)
+  shell: firewall-cmd --reload
+  when: ansible_distribution == "CentOS"
