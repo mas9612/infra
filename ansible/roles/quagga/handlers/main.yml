@@ -1,0 +1,9 @@
+- name: restart zebra
+  systemd:
+    name: zebra
+    state: restarted
+
+- name: restart bgpd
+  systemd:
+    name: bgpd
+    state: restarted

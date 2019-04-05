@@ -1,0 +1,78 @@
+- name: Disable SELinux temporarily
+  shell: setenforce 0
+  tags:
+    - quagga
+  when: ansible_distribution == "CentOS"
+
+- name: Disable SELinux permanently
+  copy:
+    src: selinux-config
+    dest: /etc/selinux/config
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - quagga
+  when: ansible_distribution == "CentOS"
+
+- name: Install quagga
+  yum:
+    name:
+      - quagga
+  tags:
+    - quagga
+  notify:
+    - restart zebra
+  when: ansible_distribution == "CentOS"
+
+- name: Install telnet
+  yum:
+    name:
+      - telnet
+  tags:
+    - quagga
+  when: ansible_distribution == "CentOS"
+
+- name: Copy zebra.conf
+  copy:
+    src: zebra.conf
+    dest: /etc/quagga/zebra.conf
+    owner: quagga
+    group: quagga
+    mode: 0640
+  tags:
+    - zebra
+  notify:
+    - restart zebra
+  when: ansible_distribution == "CentOS"
+
+- name: Enable/Start zebra (quagga kernel interface)
+  systemd:
+    name: zebra
+    enabled: yes
+    state: started
+  tags:
+    - zebra
+  when: ansible_distribution == "CentOS"
+
+- name: Copy bgpd.conf
+  copy:
+    src: bgpd.conf
+    dest: /etc/quagga/bgpd.conf
+    owner: quagga
+    group: quagga
+    mode: 0600
+  tags:
+    - bgpd
+  notify:
+    - restart bgpd
+  when: ansible_distribution == "CentOS"
+
+- name: Enable/Start bgpd
+  systemd:
+    name: bgpd
+    enabled: yes
+    state: started
+  tags:
+    - bgpd
+  when: ansible_distribution == "CentOS"
