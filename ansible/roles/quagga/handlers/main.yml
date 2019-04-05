@@ -7,3 +7,6 @@
   systemd:
     name: bgpd
     state: restarted
+
+- name: reload firewalld
+  shell: firewall-cmd --reload

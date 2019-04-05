@@ -76,3 +76,16 @@
   tags:
     - bgpd
   when: ansible_distribution == "CentOS"
+
+- name: Allow BGP port from internal network
+  firewalld:
+    rich_rule: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  tags:
+    - bgpd
+  notify: reload firewalld
+  with_items:
+    - 'rule family=ipv4 source address="10.1.0.0/16" service name=bgp accept'
+    - 'rule family=ipv4 source address="172.16.0.0/16" service name=bgp accept'
