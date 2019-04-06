@@ -22,3 +22,8 @@ resource "vsphere_resource_pool" "rp_edge" {
   name                    = "k800123-edge"
   parent_resource_pool_id = "${data.vsphere_resource_pool.rp_k800123_35.id}"
 }
+
+resource "vsphere_resource_pool" "rp_tor35" {
+  name                    = "k800123-tor35"
+  parent_resource_pool_id = "${data.vsphere_resource_pool.rp_k800123_35.id}"
+}

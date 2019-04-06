@@ -22,3 +22,23 @@ data "vsphere_network" "nw_k800123_edge" {
   name          = "k800123-edge"
   datacenter_id = "${data.vsphere_datacenter.dc_master.id}"
 }
+
+resource "vsphere_host_virtual_switch" "k800123-dc35" {
+  name           = "vSwitchk800123Dc35"
+  host_system_id = "${data.vsphere_host.host_35.id}"
+
+  network_adapters = []
+  active_nics      = []
+  standby_nics     = []
+}
+
+resource "vsphere_host_port_group" "k800123-dc35-pg" {
+  name                = "k800123-dc35"
+  host_system_id      = "${data.vsphere_host.host_35.id}"
+  virtual_switch_name = "${vsphere_host_virtual_switch.k800123-dc35.name}"
+}
+
+data "vsphere_network" "nw_k800123_dc35" {
+  name          = "k800123-dc35"
+  datacenter_id = "${data.vsphere_datacenter.dc_master.id}"
+}
