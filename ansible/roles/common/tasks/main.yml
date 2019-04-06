@@ -16,6 +16,7 @@
     - chrony
     - firewalld
     - vim
+    - git
   when: ansible_distribution == "CentOS"
 
 - name: Install SELinux Library
