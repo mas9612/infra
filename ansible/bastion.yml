@@ -1,4 +1,4 @@
-- hosts: edge
+- hosts: bastion
   roles:
     - common
     - tmux

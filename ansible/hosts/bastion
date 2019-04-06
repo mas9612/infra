@@ -1,2 +1,2 @@
-[edge]
+[bastion]
 172.16.1.1 host=bastion ansible_user=k800123
