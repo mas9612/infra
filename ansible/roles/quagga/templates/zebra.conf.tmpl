@@ -1,14 +1,16 @@
-hostname edge-01
+hostname {{ host }}
 password zebra
 enable password zebra
 !
+! TODO: want to set interface name with some way
 interface ens192
  description connected to seminar network
- ip address 10.1.240.1/16
+ ip address {{ ens192_addr }}
  ipv6 nd suppress-ra
 !
+! TODO: want to set interface name with some way
 interface ens224
- ip address 172.16.0.11/18
+ ip address {{ ens224_addr }}
  ipv6 nd suppress-ra
 !
 interface lo

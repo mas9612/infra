@@ -1,3 +1,6 @@
+- name: reload sysctl
+  shell: sysctl --system
+
 - name: restart zebra
   systemd:
     name: zebra

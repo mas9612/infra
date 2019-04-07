@@ -1,0 +1,6 @@
+- name: Install sshpass
+  yum:
+    name: sshpass
+  tags:
+    - sshpass
+  when: ansible_distribution == "CentOS"

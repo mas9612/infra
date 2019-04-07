@@ -1,2 +1,0 @@
-[edge]
-10.1.240.1 host=edge-01 ansible_user=k800123

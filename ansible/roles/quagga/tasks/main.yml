@@ -15,6 +15,23 @@
     - quagga
   when: ansible_distribution == "CentOS"
 
+- name: Install tcpdump
+  yum:
+    name:
+      - tcpdump
+  tags:
+    - quagga
+  when: ansible_distribution == "CentOS"
+
+- name: Disable firewall temporarily
+  systemd:
+    name: firewalld
+    enabled: no
+    state: stopped
+  tags:
+    - quagga
+  when: ansible_distribution == "CentOS"
+
 - name: Install quagga
   yum:
     name:
@@ -33,9 +50,22 @@
     - quagga
   when: ansible_distribution == "CentOS"
 
-- name: Copy zebra.conf
+- name: Set kernel parameter
   copy:
-    src: zebra.conf
+    src: quagga.conf
+    dest: /etc/sysctl.d/quagga.conf
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - quagga
+  notify:
+    - reload sysctl
+  when: ansible_distribution == "CentOS"
+
+- name: Copy zebra.conf
+  template:
+    src: zebra.conf.tmpl
     dest: /etc/quagga/zebra.conf
     owner: quagga
     group: quagga
@@ -57,7 +87,7 @@
 
 - name: Copy bgpd.conf
   copy:
-    src: bgpd.conf
+    src: "{{ host }}.bgpd.conf"
     dest: /etc/quagga/bgpd.conf
     owner: quagga
     group: quagga
