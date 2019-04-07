@@ -26,6 +26,7 @@
 - name: Disable firewall temporarily
   systemd:
     name: firewalld
+    enabled: no
     state: stopped
   tags:
     - quagga
@@ -63,8 +64,8 @@
   when: ansible_distribution == "CentOS"
 
 - name: Copy zebra.conf
-  copy:
-    src: zebra.conf
+  template:
+    src: zebra.conf.tmpl
     dest: /etc/quagga/zebra.conf
     owner: quagga
     group: quagga
@@ -86,7 +87,7 @@
 
 - name: Copy bgpd.conf
   copy:
-    src: bgpd.conf
+    src: "{{ host }}.bgpd.conf"
     dest: /etc/quagga/bgpd.conf
     owner: quagga
     group: quagga

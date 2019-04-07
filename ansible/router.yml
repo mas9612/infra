@@ -1,0 +1,9 @@
+- hosts: edge
+  roles:
+    - common
+    - quagga
+
+- hosts: tor35
+  roles:
+    - common
+    - quagga

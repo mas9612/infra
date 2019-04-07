@@ -1,0 +1,5 @@
+[edge]
+10.1.240.1 host=edge-01 ens192_addr=10.1.240.1/16 ens224_addr=172.16.0.31/18 ansible_user=k800123
+
+[tor35]
+172.16.0.32 host=tor35-01 ens192_addr=172.16.0.32/18 ens224_addr=172.16.192.1/18 ansible_user=k800123
