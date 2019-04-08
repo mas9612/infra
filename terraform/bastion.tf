@@ -30,11 +30,11 @@ resource "vsphere_virtual_machine" "bastion" {
       }
 
       network_interface {
-        ipv4_address = "172.16.1.1"
+        ipv4_address = "192.168.97.100"
         ipv4_netmask = 18
       }
 
-      ipv4_gateway    = "172.16.0.31"
+      ipv4_gateway    = "192.168.97.21"
       dns_server_list = ["10.1.3.21", "10.1.3.80"]
     }
   }
