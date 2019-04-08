@@ -39,11 +39,20 @@ resource "vsphere_virtual_machine" "edge-01" {
         ipv4_netmask = 16
       }
 
-      network_interface {
-        ipv4_address = "172.16.0.31"
-        ipv4_netmask = 18
-      }
+      # network_interface {
+      #   ipv4_address = "192.168.97.1"
+      #   ipv4_netmask = 24
+      # }
+      #
+      # network_interface {
+      #   ipv4_address = "192.168.97.11"
+      #   ipv4_netmask = 24
+      # }
 
+      network_interface {
+        ipv4_address = "192.168.97.21"
+        ipv4_netmask = 24
+      }
       ipv4_gateway    = "10.1.3.1"
       dns_server_list = ["10.1.3.21", "10.1.3.80"]
     }
@@ -87,16 +96,16 @@ resource "vsphere_virtual_machine" "tor35-01" {
       }
 
       network_interface {
-        ipv4_address = "172.16.0.32"
-        ipv4_netmask = 18
+        ipv4_address = "192.168.97.22"
+        ipv4_netmask = 24
       }
 
       network_interface {
-        ipv4_address = "172.16.192.1"
-        ipv4_netmask = 18
+        ipv4_address = "192.168.100.1"
+        ipv4_netmask = 24
       }
 
-      ipv4_gateway    = "172.16.0.31"
+      ipv4_gateway    = "192.168.97.21"
       dns_server_list = ["10.1.3.21", "10.1.3.80"]
     }
   }
