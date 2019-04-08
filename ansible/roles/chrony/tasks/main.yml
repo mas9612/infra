@@ -1,0 +1,21 @@
+- name: Install chrony
+  yum:
+    name: chrony
+  when: ansible_distribution == "CentOS"
+
+- name: Copy chrony.conf
+  copy:
+    src: templates/chrony.conf
+    dest: /etc/chrony.conf
+    mode: 0644
+    owner: root
+    group: root
+  when: ansible_distribution == "CentOS"
+
+- name: Start and Enable chronyd
+  systemd:
+    name: chronyd.service
+    daemon_reload: yes
+    enabled: yes
+    state: started
+  when: ansible_distribution == "CentOS"
