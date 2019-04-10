@@ -1,1 +1,5 @@
 terraform.tfvars
+terraform/*.out
+
+ansible/*.retry
+ansible/facts.json
