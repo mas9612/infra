@@ -31,7 +31,7 @@ resource "vsphere_virtual_machine" "bastion" {
 
       network_interface {
         ipv4_address = "192.168.97.100"
-        ipv4_netmask = 18
+        ipv4_netmask = 24
       }
 
       ipv4_gateway    = "192.168.97.21"
