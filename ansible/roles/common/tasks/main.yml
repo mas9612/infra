@@ -84,9 +84,11 @@
 
 - name: firewalld - Reload (To load node_exporter service)
   shell: firewall-cmd --reload
+  tags:
+    - firewalld
   when: ansible_distribution == "CentOS"
 
-- name: firewalld - Allow ssh/node_exporter only from internal network
+- name: firewalld - Allow ssh/node_exporter only from internal network (bastion)
   firewalld:
     rich_rule: "{{ item }}"
     permanent: yes
@@ -95,7 +97,23 @@
   with_items:
     - 'rule family=ipv4 source address="10.1.0.0/16" service name=ssh accept'
     - 'rule family=ipv4 source address="10.1.0.0/16" service name=node_exporter accept'
-  when: ansible_distribution == "CentOS"
+  tags:
+    - firewalld
+  when: ansible_distribution == "CentOS" and "bastion" in group_names
+
+- name: firewalld - Allow ssh only from bastion host, node_exporter from internal network (internal hosts)
+  firewalld:
+    rich_rule: "{{ item }}"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  with_items:
+    - 'rule family=ipv4 source address="192.168.97.100/32" service name=ssh accept'
+    - 'rule family=ipv4 source address="10.1.0.0/16" service name=node_exporter accept'
+    - 'rule family=ipv4 source address="192.168.97.0/18" service name=node_exporter accept'
+  tags:
+    - firewalld
+  when: ansible_distribution == "CentOS" and "bastion" not in group_names
 
 - name: firewalld - Delete ssh rule
   firewalld:
@@ -103,7 +121,12 @@
     permanent: true
     immediate: yes
     state: disabled
+  tags:
+    - firewalld
+  when: ansible_distribution == "CentOS"
 
 - name: firewalld - Reload (To reflect changes)
   shell: firewall-cmd --reload
+  tags:
+    - firewalld
   when: ansible_distribution == "CentOS"

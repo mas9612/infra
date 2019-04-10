@@ -1,0 +1,7 @@
+- hosts: app
+  roles:
+    - common
+
+- hosts: elasticsearch
+  roles:
+    - common
