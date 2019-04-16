@@ -1,0 +1,2 @@
+[authserver]
+192.168.100.20 ansible_user=k800123
