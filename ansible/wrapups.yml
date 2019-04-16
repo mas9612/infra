@@ -1,0 +1,9 @@
+- hosts: app
+  roles:
+    - common
+    - docker
+
+- hosts: elasticsearch
+  roles:
+    - common
+    - docker

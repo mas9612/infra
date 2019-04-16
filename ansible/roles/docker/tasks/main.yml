@@ -1,0 +1,34 @@
+- name: Install dependencies
+  yum:
+    name:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+  tags:
+    - docker
+  when: ansible_distribution == "CentOS"
+
+- name: Setup repository
+  shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  tags:
+    - docker
+  when: ansible_distribution == "CentOS"
+
+- name: Install Docker
+  yum:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+  tags:
+    - docker
+  when: ansible_distribution == "CentOS"
+
+- name: Start/Enable Docker
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+  tags:
+    - docker
+  when: ansible_distribution == "CentOS"
