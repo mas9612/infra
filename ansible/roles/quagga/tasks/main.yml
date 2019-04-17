@@ -1,8 +1,15 @@
+- name: Check SELinux status
+  shell: getenforce
+  register: selinux_status
+  tags:
+    - quagga
+  when: ansible_distribution == "CentOS"
+
 - name: Disable SELinux temporarily
   shell: setenforce 0
   tags:
     - quagga
-  when: ansible_distribution == "CentOS"
+  when: ansible_distribution == "CentOS" and selinux_status.stdout != "Disabled"
 
 - name: Disable SELinux permanently
   copy:
