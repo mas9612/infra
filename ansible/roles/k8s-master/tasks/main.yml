@@ -10,10 +10,14 @@
     - {'src': 'templates/etcd.xml', 'dest': '/etc/firewalld/services/etcd.xml'}
     - {'src': 'templates/kube-controller-manager.xml', 'dest': '/etc/firewalld/services/kube-controller-manager.xml'}
     - {'src': 'templates/kube-scheduler.xml', 'dest': '/etc/firewalld/services/kube-scheduler.xml'}
+  tags:
+    - k8s-master
   when: ansible_distribution == "CentOS"
 
 - name: firewalld - Reload
   shell: firewall-cmd --reload
+  tags:
+    - k8s-master
   when: ansible_distribution == "CentOS"
 
 - name: firewalld - Allow master services
@@ -27,29 +31,6 @@
     - "etcd"
     - "kube-controller-manager"
     - "kube-scheduler"
-  when: ansible_distribution == "CentOS"
-
-- name: kubeadm - Copy config file
-  copy:
-    src: "templates/kubeadm.yml"
-    dest: "/tmp/kubeadm.yml"
-    mode: 0644
-    owner: root
-    group: root
-  when: ansible_distribution == "CentOS"
-
-- name: kubeadm - kubeadm init
-  shell: kubeadm init --config /tmp/kubeadm.yml
-  register: kubeadm_out
-  when: ansible_distribution == "CentOS"
-
-- name: kubeadm - Print output
-  debug:
-    msg: "{{ kubeadm_out.stdout_lines }}"
-  when: ansible_distribution == "CentOS"
-
-- name: Install Calico
-  shell: |
-    kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
-    kubectl --kubeconfig=/etc/kubernetes/admin.conf apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+  tags:
+    - k8s-master
   when: ansible_distribution == "CentOS"
