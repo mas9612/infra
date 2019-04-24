@@ -23,6 +23,11 @@
     - k8s-node
   when: ansible_distribution == "CentOS"
 
+- name: Ensure facts is the latest
+  setup:
+  tags:
+    - k8s-node
+
 - name: Check swap size
   assert:
     that: "ansible_swaptotal_mb <= 0"
