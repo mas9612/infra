@@ -1,0 +1,4 @@
+- hosts: authserver
+  roles:
+    - common
+    - docker
