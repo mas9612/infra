@@ -7,10 +7,14 @@
     group: root
   with_items:
     - {'src': 'templates/nodeport.xml', 'dest': '/etc/firewalld/services/nodeport.xml'}
+  tags:
+    - k8s-worker
   when: ansible_distribution == "CentOS"
 
 - name: firewalld - Reload
   shell: firewall-cmd --reload
+  tags:
+    - k8s-worker
   when: ansible_distribution == "CentOS"
 
 - name: firewalld - Allow worker services
@@ -19,4 +23,6 @@
     permanent: true
     immediate: yes
     state: enabled
+  tags:
+    - k8s-worker
   when: ansible_distribution == "CentOS"

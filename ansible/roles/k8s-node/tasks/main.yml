@@ -10,6 +10,8 @@
 
 - name: Disable swap
   shell: swapoff -a
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
 - name: Disable swap permanently
@@ -17,12 +19,14 @@
     path: /etc/fstab
     regexp: 'centos-swap'
     state: absent
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
 - name: Check swap size
   assert:
     that: "ansible_swaptotal_mb <= 0"
-    fail_msg: "Swap msut be disabled"
+    fail_msg: "Swap must be disabled"
 
 - name: Copy firewalld service files
   copy:
@@ -31,12 +35,16 @@
     mode: 0644
     owner: root
     group: root
+  tags:
+    - k8s-node
   with_items:
     - {'src': 'templates/kubelet.xml', 'dest': '/etc/firewalld/services/kubelet.xml'}
   when: ansible_distribution == "CentOS"
 
 - name: firewalld - Reload
   shell: firewall-cmd --reload
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
 - name: firewalld - Allow k8s services
@@ -47,60 +55,47 @@
     state: enabled
   with_items:
     - "kubelet"
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
-- name: Install Docker - Set up repository
-  yum:
-    name:
-      - yum-utils
-      - device-mapper-persistent-data
-      - lvm2
-  when: ansible_distribution == "CentOS"
-
-- name: Install Docker - Add docker repository
-  shell: "yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
-  when: ansible_distribution == "CentOS"
-
-- name: Install Docker - Update
-  yum:
-    name: '*'
-  when: ansible_distribution == "CentOS"
-
-- name: Install Docker - Install Docker CE
-  yum:
-    name:
-      - "docker-ce-18.06.1.ce"
-  when: ansible_distribution == "CentOS"
-
-- name: Install Docker - Create /etc/docker
+- name: Docker - Create /etc/docker
   file:
     path: /etc/docker
     state: directory
     mode: 0755
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
-- name: Install Docker - Copy daemon.json
+- name: Docker - Copy daemon.json
   copy:
     src: "templates/daemon.json"
     dest: "/etc/docker/daemon.json"
     mode: 0644
     owner: root
     group: root
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
-- name: Install Docker - Create /etc/systemd/system/docker.service.d
+- name: Docker - Create /etc/systemd/system/docker.service.d
   file:
     path: /etc/systemd/system/docker.service.d
     state: directory
     mode: 0755
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
-- name: Install Docker - Start Docker service
+- name: Docker - Restart Docker service
   systemd:
     name: docker.service
     daemon_reload: yes
     enabled: yes
     state: restarted
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
 - name: Install kubeadm - Add Kubernetes repository
@@ -112,10 +107,14 @@
     group: root
   with_items:
     - {'src': 'templates/kubernetes.repo', 'dest': '/etc/yum.repos.d/kubernetes.repo'}
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
 - name: Install kubeadm - Disable SELinux
   shell: setenforce 0
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
 - name: Install kubeadm - Disable SELinux permanently
@@ -123,6 +122,8 @@
     path: /etc/selinux/config
     regexp: '^SELINUX='
     line: 'SELINUX=disabled'
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
 - name: Install kubeadm - Install kubelet, kubeadm, kubectl
@@ -132,6 +133,8 @@
       - kubeadm
       - kubectl
     disable_excludes: kubernetes
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
 - name: Install kubeadm - Start kubelet
@@ -140,6 +143,8 @@
     daemon_reload: yes
     enabled: yes
     state: restarted
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
 - name: Install kubeadm - Copy /etc/sysctl.d/k8s.conf
@@ -149,12 +154,18 @@
     mode: 0644
     owner: root
     group: root
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
 - name: Install kubeadm - Reload system configuration files
   shell: sysctl --system
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
 
 - name: Pull required images
   shell: kubeadm config images pull
+  tags:
+    - k8s-node
   when: ansible_distribution == "CentOS"
