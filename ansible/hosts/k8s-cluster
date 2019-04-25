@@ -1,6 +1,13 @@
-[k8s-master]
+[test-k8s-master]
 192.168.100.100 ansible_user=k800123
 
-[k8s-worker]
+[test-k8s-worker]
 192.168.100.101 ansible_user=k800123
 192.168.100.102 ansible_user=k800123
+
+[prod-k8s-master]
+192.168.100.50 ansible_user=k800123
+
+[prod-k8s-worker]
+192.168.100.51 ansible_user=k800123
+192.168.100.52 ansible_user=k800123
