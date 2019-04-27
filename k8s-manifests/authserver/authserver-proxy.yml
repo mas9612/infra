@@ -1,0 +1,41 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authserver-proxy
+spec:
+  ports:
+    - name: auth-proxy-port
+      port: 8080
+      protocol: TCP
+      targetPort: auth-proxy-port
+  selector:
+    app: authserver-proxy
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authserver-proxy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: authserver-proxy
+  template:
+    metadata:
+      name: authserver-proxy
+      labels:
+        app: authserver-proxy
+    spec:
+      containers:
+        - name: authserver-proxy
+          image: mas9612/authserver-proxy:latest
+          args:
+            - --authserver-addr
+            - authserver
+          ports:
+            - name: auth-proxy-port
+              containerPort: 8080
+              protocol: TCP
