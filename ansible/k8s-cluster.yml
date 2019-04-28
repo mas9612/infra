@@ -2,6 +2,7 @@
   roles:
     - common
     - docker
+    - nfs-client
     - k8s-node
     - k8s-master
 
@@ -9,6 +10,7 @@
   roles:
     - common
     - docker
+    - nfs-client
     - k8s-node
     - k8s-master
 
@@ -16,6 +18,7 @@
   roles:
     - common
     - docker
+    - nfs-client
     - k8s-node
     - k8s-worker
 
@@ -23,5 +26,6 @@
   roles:
     - common
     - docker
+    - nfs-client
     - k8s-node
     - k8s-worker
