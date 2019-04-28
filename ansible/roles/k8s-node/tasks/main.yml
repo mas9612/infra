@@ -103,6 +103,15 @@
     - k8s-node
   when: ansible_distribution == "CentOS"
 
+- name: Copy sysctl config for Elasticsearch
+  copy:
+    src: templates/elasticsearch.conf
+    dest: /etc/sysctl.d/elasticsearch.conf
+  tags:
+    - k8s-node
+  notify: reload sysctl
+  when: ansible_distribution == "CentOS"
+
 - name: Install kubeadm - Add Kubernetes repository
   copy:
     src: "{{ item.src }}"

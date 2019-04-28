@@ -1,0 +1,7 @@
+- name: Install NFS package
+  yum:
+    name:
+      - nfs-utils
+  tags:
+    - nfs-client
+  when: ansible_distribution == "CentOS"
