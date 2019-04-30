@@ -1,0 +1,26 @@
+- name: Install MariaDB
+  yum:
+    name: mariadb-server
+  tags:
+    - mysql
+  # notify: mysql secure installation
+  when: ansible_distribution == "CentOS"
+
+- name: Start MariaDB
+  systemd:
+    name: mariadb
+    state: started
+    enabled: yes
+  tags:
+    - mysql
+  when: ansible_distribution == "CentOS"
+
+- name: Allow MySQL port
+  firewalld:
+    service: mysql
+    permanent: true
+    immediate: yes
+    state: enabled
+  tags:
+    - mysql
+  when: ansible_distribution == "CentOS"
