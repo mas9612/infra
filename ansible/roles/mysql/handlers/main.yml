@@ -1,0 +1,3 @@
+# TODO: to be able to automated this
+- name: mysql secure installation
+  shell: "mysql_secure_installation --use-default -p {{ mysql_root_password }}"

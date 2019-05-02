@@ -1,0 +1,59 @@
+- name: Install MariaDB
+  yum:
+    name:
+      - mariadb-server
+      - python2-pip
+  tags:
+    - mysql
+  # notify: mysql secure installation
+  when: ansible_distribution == "CentOS"
+
+- name: Start MariaDB
+  systemd:
+    name: mariadb
+    state: started
+    enabled: yes
+  tags:
+    - mysql
+  when: ansible_distribution == "CentOS"
+
+- name: Allow MySQL port
+  firewalld:
+    service: mysql
+    permanent: true
+    immediate: yes
+    state: enabled
+  tags:
+    - mysql
+  when: ansible_distribution == "CentOS"
+
+- name: Install PyMySQL
+  pip:
+    name: PyMySQL
+  tags:
+    - mysql
+  when: ansible_distribution == "CentOS"
+
+- name: Create DB
+  mysql_db:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - grafana
+  tags:
+    - mysql
+  when: ansible_distribution == "CentOS"
+
+- name: Create User
+  mysql_user:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    name: grafana
+    host: "%"
+    password: "{{ mysql_user_grafana_password }}"
+    priv: "grafana.*:ALL"
+  tags:
+    - mysql
+  when: ansible_distribution == "CentOS"

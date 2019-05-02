@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  ports:
+    - name: grafana
+      port: 3000
+      protocol: TCP
+      targetPort: grafana-port
+  selector:
+    app: grafana
+  type: LoadBalancer
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-storage
+  labels:
+    app: grafana
+  namespace: monitoring
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 8Gi
+  storageClassName: managed-nfs-storage
+
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  replicas: 1
+  template:
+    metadata:
+      namespace: monitoring
+      labels:
+        app: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:6.1.6
+          ports:
+            - name: grafana-port
+              containerPort: 3000
+          env:
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-secret
+                  key: grafana-admin-pass
+                  optional: false
+            - name: GF_DATABASE_TYPE
+              value: mysql
+            - name: GF_DATABASE_HOST
+              value: 192.168.100.41
+            - name: GF_DATABASE_NAME
+              value: grafana
+            - name: GF_DATABASE_USER
+              value: grafana
+            - name: GF_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: grafana-secret
+                  key: mysql-user-pass
+                  optional: false
+          volumeMounts:
+            - name: grafana-storage
+              mountPath: /var/lib/grafana
+          livenessProbe:
+            initialDelaySeconds: 60
+            httpGet:
+              path: /api/health
+              port: 3000
+          readinessProbe:
+            initialDelaySeconds: 60
+            httpGet:
+              path: /api/health
+              port: 3000
+      volumes:
+        - name: grafana-storage
+          persistentVolumeClaim:
+            claimName: grafana-storage
