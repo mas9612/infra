@@ -17,8 +17,7 @@ data:
           - alertmanager:9093
 
     rule_files:
-      # - "first_rules.yml"
-      # - "second_rules.yml"
+      - "alert_rules.yml"
 
     scrape_configs:
       - job_name: 'prometheus'
@@ -46,6 +45,16 @@ data:
         static_configs:
           - targets:
             - "192.168.100.1:9100"
+  alert_rules.yml: |
+    groups:
+      - name: Node alerts
+        rules:
+          - alert: NodeDown
+            expr: up == 0
+            for: 10m
+            annotations:
+              summary: "Node {{ $labels.instance }} is Down"
+              description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for 10 minutes."
 
 ---
 apiVersion: v1
@@ -136,6 +145,9 @@ spec:
             - name: prom-config
               mountPath: /etc/prometheus/prometheus.yml
               subPath: prometheus.yml
+            - name: prom-config
+              mountPath: /etc/prometheus/alert_rules.yml
+              subPath: alert_rules.yml
             - name: prom-storage
               mountPath: /prometheus
           livenessProbe:
