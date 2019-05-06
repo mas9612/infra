@@ -1,0 +1,122 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: etcd
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: etcd-internal
+  namespace: etcd
+spec:
+  clusterIP: None
+  ports:
+    - name: etcd-client
+      port: 2379
+    - name: etcd-server
+      port: 2380
+  selector:
+    app: etcd
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: etcd
+  namespace: etcd
+spec:
+  ports:
+    - name: etcd-client
+      port: 2379
+      protocol: TCP
+      targetPort: etcd-client
+    - name: etcd-server
+      port: 2380
+      protocol: TCP
+      targetPort: etcd-server
+  selector:
+    app: etcd
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: etcd
+  namespace: etcd
+  labels:
+    app: etcd
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: etcd
+  serviceName: etcd-internal
+  template:
+    metadata:
+      name: etcd
+      namespace: etcd
+      labels:
+        app: etcd
+    spec:
+      containers:
+        - name: etcd
+          image: quay.io/coreos/etcd:v3.3
+          args:
+            - /usr/local/bin/etcd
+            - --name
+            - "$(POD_NAME)"
+            - --data-dir
+            - /data
+            - --initial-advertise-peer-urls
+            - "http://$(POD_NAME).etcd-internal:2380"
+            - --listen-peer-urls
+            - "http://$(POD_IP):2380"
+            - --listen-client-urls
+            - "http://$(POD_IP):2379"
+            - --advertise-client-urls
+            - "http://$(POD_IP):2379"
+            - --initial-cluster-token
+            - etcd-cluster-01
+            - --initial-cluster
+            - "etcd-0=http://etcd-0.etcd-internal:2380,etcd-1=http://etcd-1.etcd-internal:2380,etcd-2=http://etcd-2.etcd-internal:2380"
+            - --initial-cluster-state
+            - new
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          ports:
+            - name: etcd-client
+              containerPort: 2379
+              protocol: TCP
+            - name: etcd-server
+              containerPort: 2380
+              protocol: TCP
+          volumeMounts:
+            - name: etcd-data
+              mountPath: /data
+      volumes:
+        - name: etcd-data
+          persistentVolumeClaim:
+            claimName: etcd-data
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: etcd-data
+        namespace: etcd
+      spec:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 8Gi
+        storageClassName: managed-nfs-storage
