@@ -1,0 +1,9 @@
+- name: named-checkconf
+  shell: named-checkconf -z
+
+- name: reload named
+  systemd:
+    name: named
+    daemon_reload: yes
+    enabled: yes
+    state: restarted

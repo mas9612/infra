@@ -1,0 +1,4 @@
+- hosts: dns-master
+  roles:
+    - common
+    - bind

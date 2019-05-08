@@ -1,38 +1,15 @@
-variable "etcd-instance_ips" {
-  default = {
-    "0" = "10.1.240.121"
-    "1" = "10.1.240.122"
-    "2" = "10.1.240.123"
-  }
-}
-
-variable "etcd-instance_hostnames" {
-  default = {
-    "0" = "etcd-01"
-    "1" = "etcd-02"
-    "2" = "etcd-03"
-  }
-}
-
-resource "vsphere_resource_pool" "etcd" {
-  name                    = "k800123-etcd"
-  parent_resource_pool_id = "${data.vsphere_resource_pool.pool_35.id}"
-}
-
-resource "vsphere_virtual_machine" "etcd-node" {
-  count = 3
-
-  name             = "k800123-${lookup(var.etcd-instance_hostnames, count.index)}"
-  resource_pool_id = "${vsphere_resource_pool.etcd.id}"
+resource "vsphere_virtual_machine" "dns-master-01" {
+  name             = "k800123-dns-master-01"
+  resource_pool_id = "${data.vsphere_resource_pool.rp_production.id}"
   datastore_id     = "${data.vsphere_datastore.ds_master.id}"
 
   num_cpus  = 2
-  memory    = 2048
+  memory    = 4096
   guest_id  = "${data.vsphere_virtual_machine.centos7.guest_id}"
   scsi_type = "${data.vsphere_virtual_machine.centos7.scsi_type}"
 
   network_interface {
-    network_id   = "${data.vsphere_network.nw_vm_network.id}"
+    network_id   = "${data.vsphere_network.nw_k800123_dc35.id}"
     adapter_type = "${data.vsphere_virtual_machine.centos7.network_interface_types[0]}"
   }
 
@@ -48,16 +25,16 @@ resource "vsphere_virtual_machine" "etcd-node" {
 
     customize {
       linux_options {
-        host_name = "${lookup(var.etcd-instance_hostnames, count.index)}"
+        host_name = "dns-master-01"
         domain    = "k800123.firefly.kutc.kansai-u.ac.jp"
       }
 
       network_interface {
-        ipv4_address = "${lookup(var.etcd-instance_ips, count.index)}"
-        ipv4_netmask = 16
+        ipv4_address = "192.168.100.60"
+        ipv4_netmask = 24
       }
 
-      ipv4_gateway    = "10.1.3.1"
+      ipv4_gateway    = "192.168.100.1"
       dns_server_list = ["10.1.3.21", "10.1.3.80"]
     }
   }
