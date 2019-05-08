@@ -1,0 +1,17 @@
+$TTL 3h
+
+@ IN SOA dns1.k800123.firefly.kutc.kansai-u.ac.jp. hostmaster.k800123.firefly.kutc.kansai-u.ac.jp. (
+    2019050801  ; serial number
+    3h          ; refresh after 3 hours
+    1h          ; retry after 1 hour
+    1w          ; expire after 1 week
+    1h          ; set negative cache TTL as 1h
+)
+
+    IN NS dns1.k800123.firefly.kutc.kansai-u.ac.jp.
+
+60 IN PTR dns1.k800123.firefly.kutc.kansai-u.ac.jp.
+
+50 IN PTR prod-k8s-master-01.k800123.firefly.kutc.kansai-u.ac.jp.
+51 IN PTR prod-k8s-node-01.k800123.firefly.kutc.kansai-u.ac.jp.
+52 IN PTR prod-k8s-node-02.k800123.firefly.kutc.kansai-u.ac.jp.
