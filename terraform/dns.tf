@@ -25,7 +25,7 @@ resource "vsphere_virtual_machine" "dns-master-01" {
 
     customize {
       linux_options {
-        host_name = "dns-master-01"
+        host_name = "dns1"
         domain    = "k800123.firefly.kutc.kansai-u.ac.jp"
       }
 

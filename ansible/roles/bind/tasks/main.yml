@@ -17,7 +17,10 @@
   with_items:
     - {'src': 'named.conf', 'dest': '/etc/named.conf'}
     - {'src': 'db.k800123.firefly.kutc.kansai-u.ac.jp', 'dest': '/var/named/db.k800123.firefly.kutc.kansai-u.ac.jp'}
+    - {'src': 'db.192.168.97', 'dest': '/var/named/db.192.168.97'}
     - {'src': 'db.192.168.100', 'dest': '/var/named/db.192.168.100'}
+    - {'src': 'db.192.168.101', 'dest': '/var/named/db.192.168.101'}
+    - {'src': 'db.10.1.240', 'dest': '/var/named/db.10.1.240'}
     - {'src': 'db.127.0.0', 'dest': '/var/named/db.127.0.0'}
   notify:
     - named-checkconf
