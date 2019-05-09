@@ -1,7 +1,7 @@
 $TTL 3h
 
 @ IN SOA dns1.k800123.firefly.kutc.kansai-u.ac.jp. hostmaster.k800123.firefly.kutc.kansai-u.ac.jp. (
-    2019050801  ; serial number
+    2019050901  ; serial number
     3h          ; refresh after 3 hours
     1h          ; retry after 1 hour
     1w          ; expire after 1 week
@@ -12,6 +12,22 @@ $TTL 3h
 
 dns1 IN A 192.168.100.60
 
+nfs-01             IN A 192.168.100.30
+mysql-master-01    IN A 192.168.100.41
 prod-k8s-master-01 IN A 192.168.100.50
 prod-k8s-node-01   IN A 192.168.100.51
 prod-k8s-node-02   IN A 192.168.100.52
+
+edge-01  IN A 10.1.240.1
+         IN A 192.168.97.21
+tor35-01 IN A 192.168.97.22
+         IN A 192.168.100.1
+
+authserver       IN A 192.168.101.1
+authserver-proxy IN A 192.168.101.2
+wuserver         IN A 192.168.101.3
+wu-elastic       IN A 192.168.101.4
+prometheus       IN A 192.168.101.5
+alertmanager     IN A 192.168.101.6
+grafana          IN A 192.168.101.7
+etcd             IN A 192.168.101.8
