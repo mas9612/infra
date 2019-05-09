@@ -55,6 +55,14 @@ data:
             annotations:
               summary: "Node {{ $labels.instance }} is Down"
               description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for 10 minutes."
+      - name: NFS Disk space
+        rules:
+          - alert: DiskAvailBytesLow
+            expr: (node_filesystem_avail_bytes{job="nfs", device="/dev/mapper/centos-root"} / node_filesystem_size_bytes{job="nfs", device="/dev/mapper/centos-root"}) < 0.2
+            for: 10m
+            annotations:
+              summary: "NFS Disk avail space is low"
+              description: "Low disk available on {{ $labels.instance }} of job {{ $labels.job }}."
 
 ---
 apiVersion: v1
