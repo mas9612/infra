@@ -1,5 +1,27 @@
 ---
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: authserver
+data:
+  authserver.pub: |
+    -----BEGIN PUBLIC KEY-----
+    MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAyv/W5ZPyN4g4kBPEwHdo
+    p+fsYAwfhnGCqPx1kF3yaZCqXux95NuHo6n+Qk44StMWHXNPoObhTiVJNE/uwJ5j
+    Bzt1UsHVDa/5puAzqHt3l93VdwBhZEllur5D9imHBo98Jyr2GmT2WJCAfUvB4gAt
+    LlWrH9rYMU2oTEPzTiyTZiiRAiJAvBAiD0mnktR4Lal92BxJahmr1JNWRG66sQYP
+    y+Ok0s2dVmyz5LUZ/gm7n1Lgd6mzi8vnz1Oej9B9REO3UXjStL7xHdfNg9jYl8rU
+    1Hb4ntRN4X4AMwWiSRJMgfu48yovDD8qX6f9+jIqvnwPd+vC7q+Kt0V0H05fYdUJ
+    U0ZQ9JzOQ62bvowbuLfjQHe2iXTOO+ONvJZ7mag8Br3M/JphkkhguOOnUjwNHNeU
+    JgOv4sGYAfcXu0FuZVmANYNT4wRiF1l+5Ya0JYuFGi8tDCV0ThKIgklQGlS5UkY7
+    l8M5ERbQMGEog9wPYMdHnQFb5zuIa3BQw8RnAi+IqR0Y5qyQcNA8K4M10TEP7UGc
+    D6ec9tNeAbdMG/3CkhYC4CiA3Nc8dGDTScgqWZXHMbCCQxJ5p3ZdaNkOpRidfvi6
+    BwX/avlADTDDULaGHxUxs4TmTAQq8VSDWk8kle3Frs2yRMOxgjqhCy2X91KZ5H3e
+    HDce3XOUtPRf/W9N7hsaQmkCAwEAAQ==
+    -----END PUBLIC KEY-----
+
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: authserver
@@ -19,7 +41,7 @@ kind: Deployment
 metadata:
   name: authserver
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: authserver
@@ -31,7 +53,7 @@ spec:
     spec:
       containers:
         - name: authserver
-          image: mas9612/authserver:latest
+          image: mas9612/authserver:v0.1
           args:
             - --ldap-addr
             - 10.1.3.21
@@ -39,6 +61,8 @@ spec:
             - "uid=%s,ou=Users,dc=ldap,dc=firefly,dc=kutc,dc=kansai-u,dc=ac,dc=jp"
             - --pem
             - /app/authserver.pem
+            - --pubkey
+            - /app/authserver.pub
             - --issuer
             - authserver.k800123.firefly.kutc.kansai-u.ac.jp
           ports:
@@ -50,7 +74,14 @@ spec:
               readOnly: true
               mountPath: /app/authserver.pem
               subPath: authserver.pem
+            - name: authserver-pubkey
+              readOnly: true
+              mountPath: /app/authserver.pub
+              subPath: authserver.pub
       volumes:
         - name: authserver-signkey
           secret:
             secretName: authserver-signkey
+        - name: authserver-pubkey
+          configMap:
+            name: authserver
