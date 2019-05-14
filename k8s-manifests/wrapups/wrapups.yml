@@ -48,7 +48,7 @@ spec:
     spec:
       containers:
         - name: wuserver
-          image: mas9612/wrapups:v0.4
+          image: mas9612/wrapups:v0.5.1
           args:
             - --elastic-addr
             - wu-elastic
