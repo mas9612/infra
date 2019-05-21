@@ -18,7 +18,7 @@ resource "vsphere_virtual_machine" "prod-k8s-node" {
   count = 3
 
   name             = "k800123-${lookup(var.prod_k8s_instance_hostnames, count.index)}"
-  resource_pool_id = "${data.vsphere_resource_pool.rp_test.id}"
+  resource_pool_id = "${data.vsphere_resource_pool.rp_production.id}"
   datastore_id     = "${data.vsphere_datastore.ds_master.id}"
 
   num_cpus  = 4
