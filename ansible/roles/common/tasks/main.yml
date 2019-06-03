@@ -9,7 +9,7 @@
     state: latest
   when: ansible_distribution == "CentOS"
 
-- name: Install base packages
+- name: Install base packages, required libraries
   yum:
     name: "{{ item }}"
   with_items:
@@ -17,6 +17,10 @@
     - firewalld
     - vim
     - git
+    - NetworkManager-glib
+    - nm-connection-editor
+    - libsemanage-python
+    - policycoreutils-python
   when: ansible_distribution == "CentOS"
 
 - name: Install SELinux Library
