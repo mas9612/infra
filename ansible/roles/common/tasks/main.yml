@@ -9,7 +9,7 @@
     state: latest
   when: ansible_distribution == "CentOS"
 
-- name: Install base packages
+- name: Install base packages, required libraries
   yum:
     name: "{{ item }}"
   with_items:
@@ -17,6 +17,10 @@
     - firewalld
     - vim
     - git
+    - NetworkManager-glib
+    - nm-connection-editor
+    - libsemanage-python
+    - policycoreutils-python
   when: ansible_distribution == "CentOS"
 
 - name: Install SELinux Library
@@ -130,3 +134,17 @@
   tags:
     - firewalld
   when: ansible_distribution == "CentOS"
+
+- name: Check DNS search list
+  shell: nmcli c show ens192 | grep -E "ipv4.dns-search.+k800123"
+  register: dnssearchlist
+  tags:
+    - common
+  failed_when: dnssearchlist.rc not in [0, 1]
+  when: ansible_distribution == "CentOS"
+
+- name: Set DNS search domain
+  shell: nmcli c modify ens192 ipv4.dns-search "firefly.kutc.kansai-u.ac.jp,k800123.firefly.kutc.kansai-u.ac.jp" && nmcli c down ens192 && nmcli c up ens192
+  tags:
+    - common
+  when: ansible_distribution == "CentOS" and dnssearchlist.stdout == ""
