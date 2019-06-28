@@ -1,5 +1,7 @@
 [edge]
-10.1.240.1 host=edge-01 ens192_addr=10.1.240.1/16 ens224_addr=192.168.97.21/24 default_route=10.1.3.1 ansible_user=k800123
+10.1.240.1 host=edge-01 ens192_addr=10.1.240.1/16 ens224_addr=192.168.97.1/30 ens256_addr=192.168.97.5/30 ens161_addr=192.168.97.9/30 default_route=10.1.3.1 ansible_user=k800123
 
-[tor35]
-192.168.97.22 host=tor35-01 ens192_addr=192.168.97.22/24 ens224_addr=192.168.100.1/24 default_route=192.168.97.21 ansible_user=k800123
+[tor]
+192.168.97.2 host=tor33-01 ens192_addr=192.168.97.2/30 ens224_addr=192.168.98.1/24 default_route=192.168.97.1 ansible_user=k800123
+192.168.97.6 host=tor34-01 ens192_addr=192.168.97.6/30 ens224_addr=192.168.99.1/24 default_route=192.168.97.5 ansible_user=k800123
+192.168.97.10 host=tor35-01 ens192_addr=192.168.97.10/30 ens224_addr=192.168.100.1/24 default_route=192.168.97.9 ansible_user=k800123

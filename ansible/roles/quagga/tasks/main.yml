@@ -72,7 +72,7 @@
 
 - name: Copy zebra.conf
   template:
-    src: zebra.conf.tmpl
+    src: zebra.conf.edge.tmpl
     dest: /etc/quagga/zebra.conf
     owner: quagga
     group: quagga
@@ -81,7 +81,20 @@
     - zebra
   notify:
     - restart zebra
-  when: ansible_distribution == "CentOS"
+  when: ansible_distribution == "CentOS" and "edge" in group_names
+
+- name: Copy zebra.conf
+  template:
+    src: zebra.conf.tor.tmpl
+    dest: /etc/quagga/zebra.conf
+    owner: quagga
+    group: quagga
+    mode: 0640
+  tags:
+    - zebra
+  notify:
+    - restart zebra
+  when: ansible_distribution == "CentOS" and "tor" in group_names
 
 - name: Enable/Start zebra (quagga kernel interface)
   systemd:

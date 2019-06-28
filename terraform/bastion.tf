@@ -9,7 +9,7 @@ resource "vsphere_virtual_machine" "bastion" {
   scsi_type = "${data.vsphere_virtual_machine.centos7.scsi_type}"
 
   network_interface {
-    network_id   = "${data.vsphere_network.nw_k800123_edge.id}"
+    network_id   = "${data.vsphere_network.nw_vm_network.id}"
     adapter_type = "${data.vsphere_virtual_machine.centos7.network_interface_types[0]}"
   }
 
@@ -30,11 +30,11 @@ resource "vsphere_virtual_machine" "bastion" {
       }
 
       network_interface {
-        ipv4_address = "192.168.97.100"
-        ipv4_netmask = 24
+        ipv4_address = "10.1.240.50"
+        ipv4_netmask = 16
       }
 
-      ipv4_gateway    = "192.168.97.21"
+      ipv4_gateway    = "10.1.3.1"
       dns_server_list = ["10.1.3.21", "10.1.3.80"]
     }
   }

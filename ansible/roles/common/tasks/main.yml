@@ -112,9 +112,9 @@
     immediate: yes
     state: enabled
   with_items:
-    - 'rule family=ipv4 source address="192.168.97.100/32" service name=ssh accept'
+    - 'rule family=ipv4 source address="10.1.240.50/32" service name=ssh accept'
     - 'rule family=ipv4 source address="10.1.0.0/16" service name=node_exporter accept'
-    - 'rule family=ipv4 source address="192.168.97.0/18" service name=node_exporter accept'
+    - 'rule family=ipv4 source address="192.168.97.0/21" service name=node_exporter accept'
   tags:
     - firewalld
   when: ansible_distribution == "CentOS" and "bastion" not in group_names
