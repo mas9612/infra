@@ -1,2 +1,2 @@
 [bastion]
-192.168.97.100 host=bastion ansible_user=k800123
+10.1.240.50 host=bastion ansible_user=k800123
