@@ -3,7 +3,7 @@
     - common
     - quagga
 
-- hosts: tor
+- hosts: tor35
   roles:
     - common
     - quagga
