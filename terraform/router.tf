@@ -14,12 +14,14 @@ resource "vsphere_virtual_machine" "edge-01" {
   }
 
   network_interface {
-    network_id   = "${data.vsphere_network.nw_k800123_edge.id}"
+    network_id = "${data.vsphere_network.nw_k800123_edge.id}"
+    # network_id   = "${data.vsphere_network.nw_k800123_edge_33.id}"
     adapter_type = "${data.vsphere_virtual_machine.centos7.network_interface_types[0]}"
   }
 
   network_interface {
-    network_id   = "${data.vsphere_network.nw_k800123_edge.id}"
+    network_id = "${data.vsphere_network.nw_k800123_edge.id}"
+    # network_id   = "${data.vsphere_network.nw_k800123_edge_34.id}"
     adapter_type = "${data.vsphere_virtual_machine.centos7.network_interface_types[0]}"
   }
 
