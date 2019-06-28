@@ -13,6 +13,16 @@ interface ens224
  ip address {{ ens224_addr }}
  ipv6 nd suppress-ra
 !
+! TODO: want to set interface name with some way
+interface ens256
+ ip address {{ ens256_addr }}
+ ipv6 nd suppress-ra
+!
+! TODO: want to set interface name with some way
+interface ens161
+ ip address {{ ens161_addr }}
+ ipv6 nd suppress-ra
+!
 interface lo
 !
 ip route 0.0.0.0/0 {{ default_route }}
