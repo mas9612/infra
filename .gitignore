@@ -1,5 +1,8 @@
-terraform.tfvars
-terraform/*.out
-
 ansible/*.retry
 ansible/facts.json
+
+.terraform/
+accessKeys.csv
+terraform.tfvars
+terraform.tfstate*
+terraform/*.out
