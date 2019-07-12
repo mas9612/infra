@@ -6,3 +6,4 @@ variable "aws_access_key" {}
 variable "aws_secret_key" {}
 
 variable "slack_verification_token" {}
+variable "slack_bot_user_token" {}

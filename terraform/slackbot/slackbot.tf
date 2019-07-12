@@ -43,6 +43,7 @@ resource "aws_lambda_function" "lambda_slackbot" {
   environment {
     variables = {
       "SLACK_VERIFICATION_TOKEN" = "${var.slack_verification_token}"
+      "SLACK_BOT_USER_TOKEN" = "${var.slack_bot_user_token}"
     }
   }
 }

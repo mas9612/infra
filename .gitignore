@@ -5,4 +5,4 @@ ansible/facts.json
 accessKeys.csv
 terraform.tfvars
 terraform.tfstate*
-terraform/*.out
+terraform/**/*.out
